@@ -1,25 +1,50 @@
-# Module Blueprint
+# AWS GitLab OIDC Provider Terraform Module
 
-Terraform module blueprint
+This module allows you to create a GitHub OIDC provider and the associated IAM roles, that will help Github Actions to securely authenticate against the AWS API using an IAM role.
+
+We recommend using GitHub's OIDC provider to get short-lived credentials needed for your actions. Specifying role-to-assume without providing an aws-access-key-id or a web-identity-token-file will signal to the action that you wish to use the OIDC provider. The default session duration is 1 hour when using the OIDC provider to directly assume an IAM Role. The default session duration is 6 hours when using an IAM User to assume an IAM Role (by providing an aws-access-key-id, aws-secret-access-key, and a role-to-assume) . If you would like to adjust this you can pass a duration to role-duration-seconds, but the duration cannot exceed the maximum that was defined when the IAM Role was created. The default session name is GitHubActions, and you can modify it by specifying the desired name in role-session-name.
+
+## Use-Cases
+
+1. Retrieve temporary credentials from AWS to access cloud services
+1. Use credentials to retrieve secrets or deploy to an environment
+1. Scope role to branch or project
+1. Create an AWS OIDC provider for GitHub Actions
+
+## Features
+
+2. Create one or more IAM role that can be assumed by GitHub Actions
+3. IAM roles can be scoped to :
+     * One or more GitHub organisations
+     * One or more GitHub repository
+     * One or more branches in a repository
+
+| Feature                                                                                                | Status |
+|--------------------------------------------------------------------------------------------------------|--------|
+| Create a role for all repositories in a specific Github organisation                                    | ✅     |
+| Create a role specific to a repository for a specific organisation                                       | ✅     |
+| Create a role specific to a branch in a repository                                                      | ✅     |
+| Create a role for multiple organisations/repositories/branches                                         | ✅     |
+| Create a role for organisations/repositories/branches selected by wildcard (e.g. `feature/*` branches) | ✅     |
 
 ---
 
-[![linter](https://github.com/terraform-module/terraform-module-blueprint/actions/workflows/linter.yml/badge.svg)](https://github.com/terraform-module/terraform-module-blueprint/actions/workflows/linter.yml)
-[![release.draft](https://github.com/terraform-module/terraform-module-blueprint/actions/workflows/release.draft.yml/badge.svg)](https://github.com/terraform-module/terraform-module-blueprint/actions/workflows/release.draft.yml)
+[![linter](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider/actions/workflows/linter.yml/badge.svg)](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider/actions/workflows/linter.yml)
+[![release.draft](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider/actions/workflows/release.draft.yml/badge.svg)](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider/actions/workflows/release.draft.yml)
 
-[![](https://img.shields.io/github/license/terraform-module/terraform-module-blueprint)](https://github.com/terraform-module/terraform-module-blueprint)
-![](https://img.shields.io/github/v/tag/terraform-module/terraform-module-blueprint)
-![](https://img.shields.io/issues/github/terraform-module/terraform-module-blueprint)
-![](https://img.shields.io/github/issues/terraform-module/terraform-module-blueprint)
-![](https://img.shields.io/github/issues-closed/terraform-module/terraform-module-blueprint)
-[![](https://img.shields.io/github/languages/code-size/terraform-module/terraform-module-blueprint)](https://github.com/terraform-module/terraform-module-blueprint)
-[![](https://img.shields.io/github/repo-size/terraform-module/terraform-module-blueprint)](https://github.com/terraform-module/terraform-module-blueprint)
-![](https://img.shields.io/github/languages/top/terraform-module/terraform-module-blueprint?color=green&logo=terraform&logoColor=blue)
-![](https://img.shields.io/github/commit-activity/m/terraform-module/terraform-module-blueprint)
-![](https://img.shields.io/github/contributors/terraform-module/terraform-module-blueprint)
-![](https://img.shields.io/github/last-commit/terraform-module/terraform-module-blueprint)
-[![Maintenance](https://img.shields.io/badge/Maintenu%3F-oui-green.svg)](https://GitHub.com/terraform-module/terraform-module-blueprint/graphs/commit-activity)
-[![GitHub forks](https://img.shields.io/github/forks/terraform-module/terraform-module-blueprint.svg?style=social&label=Fork)](https://github.com/terraform-module/terraform-module-blueprint)
+[![](https://img.shields.io/github/license/terraform-module/terraform-aws-gitlab-oidc-provider)](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider)
+![](https://img.shields.io/github/v/tag/terraform-module/terraform-aws-gitlab-oidc-provider)
+![](https://img.shields.io/issues/github/terraform-module/terraform-aws-gitlab-oidc-provider)
+![](https://img.shields.io/github/issues/terraform-module/terraform-aws-gitlab-oidc-provider)
+![](https://img.shields.io/github/issues-closed/terraform-module/terraform-aws-gitlab-oidc-provider)
+[![](https://img.shields.io/github/languages/code-size/terraform-module/terraform-aws-gitlab-oidc-provider)](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider)
+[![](https://img.shields.io/github/repo-size/terraform-module/terraform-aws-gitlab-oidc-provider)](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider)
+![](https://img.shields.io/github/languages/top/terraform-module/terraform-aws-gitlab-oidc-provider?color=green&logo=terraform&logoColor=blue)
+![](https://img.shields.io/github/commit-activity/m/terraform-module/terraform-aws-gitlab-oidc-provider)
+![](https://img.shields.io/github/contributors/terraform-module/terraform-aws-gitlab-oidc-provider)
+![](https://img.shields.io/github/last-commit/terraform-module/terraform-aws-gitlab-oidc-provider)
+[![Maintenance](https://img.shields.io/badge/Maintenu%3F-oui-green.svg)](https://GitHub.com/terraform-module/terraform-aws-gitlab-oidc-provider/graphs/commit-activity)
+[![GitHub forks](https://img.shields.io/github/forks/terraform-module/terraform-aws-gitlab-oidc-provider.svg?style=social&label=Fork)](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider)
 
 ---
 
@@ -29,13 +54,18 @@ Terraform module blueprint
 
 ## Usage example
 
-IMPORTANT: The master branch is used in source just as an example. In your code, do not pin to master because there may be breaking changes between releases. Instead pin to the release tag (e.g. ?ref=tags/x.y.z) of one of our [latest releases](https://github.com/terraform-module/terraform-module-blueprint/releases).
+IMPORTANT: The master branch is used in source just as an example. In your code, do not pin to master because there may be breaking changes between releases. Instead pin to the release tag (e.g. ?ref=tags/x.y.z) of one of our [latest releases](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider/releases).
 
 ```hcl
-module "blueprint" {
-  source  = "terraform-module/blueprint"
-  version = "0.0.0"
-  # insert required variables here
+module "gitlab-oidc" {
+  source  = "terraform-module/gitlab-oidc-provider/aws"
+  version = "~> 1"
+
+  create_oidc_provider = true
+  create_oidc_role     = true
+
+  repositories              = ["terraform-module/module-blueprint"]
+  oidc_role_attach_policies = ["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]
 }
 ```
 
@@ -43,7 +73,8 @@ module "blueprint" {
 
 See `examples` directory for working examples to reference
 
-- [Examples Dir](https://github.com/terraform-module/module-blueprint/tree/master/examples/)
+- [Examples TFM Dir](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider)
+- [Examples Gitlab Pipeline](./gitlab/)
 
 ## Assumptions
 
@@ -101,21 +132,28 @@ Submit a pull request
 
 # Authors
 
-Currently maintained by [Ivan Katliarchuk](https://github.com/ivankatliarchuk) and these [awesome contributors](https://github.com/terraform-module/terraform-module-blueprint/graphs/contributors).
+Currently maintained by [Ivan Katliarchuk](https://github.com/ivankatliarchuk) and these [awesome contributors](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider/graphs/contributors).
 
 [![ForTheBadge uses-git](http://ForTheBadge.com/images/badges/uses-git.svg)](https://GitHub.com/)
 
 ## Terraform Registry
 
 - [Module](https://registry.terraform.io/modules/terraform-module/todo/aws)
+- [Terraform modules](https://registry.terraform.io/namespaces/terraform-module)
 
 ## Resources
 
-- [Terraform modules](https://registry.terraform.io/namespaces/terraform-module)
+- [AWS: create oidc](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html)
+- [Blog: OIDC with AWS and GitLab](https://oblcc.com/blog/configure-openid-connect-for-gitlab-and-aws/)
+- [Blog: Gitlab OIDC](https://docs.gitlab.com/ee/ci/cloud_services/aws/)
+- [Tfm: OIDC Gitlab](https://gitlab.com/guided-explorations/aws/configure-openid-connect-in-aws/)
 
 ## Clone Me
 
 [**Create a repository using this template →**][template.generate]
 
 <!-- resources -->
-[template.generate]: https://github.com/terraform-module/terraform-module-blueprint/generate
+[template.generate]: https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider/generate
+
+
+<!-- https://github.com/moritzheiber/terraform-aws-oidc-github-actions-module -->
