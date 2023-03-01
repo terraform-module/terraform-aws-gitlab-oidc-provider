@@ -6,7 +6,7 @@
  *
 */
 data "tls_certificate" "gitlab" {
-  url = var.url
+  url = var.gitlab_tls_url
 }
 
 resource "aws_iam_openid_connect_provider" "this" {
