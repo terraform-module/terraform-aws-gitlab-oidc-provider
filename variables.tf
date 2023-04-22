@@ -77,6 +77,13 @@ variable "gitlab_url" {
   default = "https://gitlab.com"
 }
 
+variable "gitlab_tls_url" {
+  type    = string
+  # Avoid using https scheme because the Hashicorp TLS provider has started following redirects starting v4.
+  # See https://github.com/hashicorp/terraform-provider-tls/issues/249
+  default = "tls://gitlab.com:443"
+}
+
 variable "aud_value" {
   description = "(Required) A list of client IDs (also known as audiences). When a mobile or web app registers with an OpenID Connect provider, they establish a value that identifies the application. (This is the value that's sent as the client_id parameter on OAuth requests.)"
   type    = list(string)
