@@ -44,7 +44,7 @@ variable "repositories" {
     # organization/repository format used by GitHub.
     condition = length([
       for repo in var.repositories : 1
-      if length(regexall("^project_path:[A-Za-z0-9_.-]+?/([A-Za-z0-9_.:/-]+|\\*)$", repo)) > 0
+      if length(regexall("^project_path:[A-Za-z0-9_.-]+?/([A-Za-z0-9_.:/*-]+|\\*)$", repo)) > 0
     ]) == length(var.repositories)
     error_message = "Repositories must be specified in the organization/repository format."
   }
