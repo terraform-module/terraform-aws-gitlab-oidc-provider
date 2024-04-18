@@ -2,7 +2,7 @@
 
 This module allows you to create an AWS IAM OIDC provider that trusts GitLab and the associated IAM roles, that will help GitLab Pipelines to securely authenticate against the AWS API using an IAM role.
 
-We recommend using GitLab's OIDC issuer to get short-lived credentials needed for your pipelines. Specifying role-to-assume without providing an aws-access-key-id or a web-identity-token-file will signal to the pipeline that you wish to use the OIDC provider. The default session duration is 1 hour when using the OIDC provider to directly assume an IAM Role. The default session duration is 6 hours when using an IAM User to assume an IAM Role (by providing an aws-access-key-id, aws-secret-access-key, and a role-to-assume) . If you would like to adjust this you can pass a duration to role-duration-seconds, but the duration cannot exceed the maximum that was defined when the IAM Role was created. The default session name is `GitLabPipeline`, and you can modify it by specifying the desired name in role-session-name.
+We recommend using GitLab's OIDC issuer to get short-lived credentials needed for your pipelines. Specifying role-to-assume without providing an aws-access-key-id or a web-identity-token-file will signal to the pipeline that you wish to use the OIDC provider. The default session duration is 1 hour when using the OIDC provider to directly assume an IAM Role. The default session duration is 6 hours when using an IAM User to assume an IAM Role (by providing an aws-access-key-id, aws-secret-access-key, and a role-to-assume) . If you would like to adjust this you can pass a duration to role-duration-seconds, but the duration cannot exceed the maximum that was defined when the IAM Role was created. The default session name is `GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}`, and you can modify it by specifying the desired name in role-session-name.
 
 ## Use-Cases
 
@@ -186,4 +186,3 @@ Currently maintained by [Ivan Katliarchuk](https://github.com/ivankatliarchuk) a
 
 
 <!-- https://github.com/moritzheiber/terraform-aws-oidc-github-actions-module -->
-
