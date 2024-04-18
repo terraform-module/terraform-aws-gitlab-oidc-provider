@@ -2,13 +2,13 @@
 # Resources
 ################################################################################
 
-module "gitlab-oidc" {
+module "gitlab_oidc" {
   source = "../.."
 
   create_oidc_provider = true
   create_oidc_role     = true
 
-  repositories              = ["terraform-module/terraform-aws-github-oidc-provider"]
+  repositories              = ["terraform-module/terraform-aws-gitlab-oidc-provider"]
   oidc_role_attach_policies = ["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]
 }
 

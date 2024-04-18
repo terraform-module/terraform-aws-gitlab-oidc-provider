@@ -1,6 +1,6 @@
 # Example
 
-Configuration in this directory creates a MySQL Aurora cluster.
+Configuration in this directory creates an AWS IAM OpenID Connect Provider, IAM Role and IAM Role Policy for trusing the OIDC provider.
 
 ## Usage
 

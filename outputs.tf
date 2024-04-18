@@ -10,7 +10,7 @@ output "oidc_role" {
 
 output "thumbprint" {
   description = "TLS endpoint certificate SHA1 Fingerprint"
-  value = [data.tls_certificate.gitlab.certificates[0].sha1_fingerprint]
+  value       = [data.tls_certificate.gitlab.certificates[0].sha1_fingerprint]
 }
 
 output "policy_document" {
