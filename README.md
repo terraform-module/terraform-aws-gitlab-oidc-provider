@@ -57,14 +57,14 @@ We recommend using GitLab's OIDC issuer to get short-lived credentials needed fo
 IMPORTANT: The master branch is used in source just as an example. In your code, do not pin to master because there may be breaking changes between releases. Instead pin to the release tag (e.g. ?ref=tags/x.y.z) of one of our [latest releases](https://github.com/terraform-module/terraform-aws-gitlab-oidc-provider/releases).
 
 ```hcl
-module "gitlab-oidc" {
+module "gitlab_oidc" {
   source  = "terraform-module/gitlab-oidc-provider/aws"
   version = "~> 1"
 
   create_oidc_provider = true
   create_oidc_role     = true
 
-  repositories              = ["terraform-module/module-blueprint"]
+  project_paths             = ["project_path:terraform-module/module-blueprint", "project_path:foo/bar"]
   oidc_role_attach_policies = ["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]
 }
 ```

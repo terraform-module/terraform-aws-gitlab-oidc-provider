@@ -1,3 +1,7 @@
+terraform {
+  required_version = ">= 1.0"
+}
+
 ################################################################################
 # Resources
 ################################################################################
@@ -8,7 +12,7 @@ module "gitlab_oidc" {
   create_oidc_provider = true
   create_oidc_role     = true
 
-  repositories              = ["terraform-module/terraform-aws-gitlab-oidc-provider"]
+  project_paths             = ["project_path:terraform-module/terraform-aws-gitlab-oidc-provider"]
   oidc_role_attach_policies = ["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]
 }
 
