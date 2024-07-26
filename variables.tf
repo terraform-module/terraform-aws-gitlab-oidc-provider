@@ -34,19 +34,19 @@ variable "role_description" {
   default     = "Role assumed by the Gitlab OIDC provider."
 }
 
-variable "repositories" {
-  description = "List of GitLab organization/repository names authorized to assume the role."
+variable "project_paths" {
+  description = "List of GitLab namesapce/project names authorized to assume the role."
   type        = list(string)
   default     = []
 
   validation {
-    # Ensures each element of github_repositories list matches the
-    # organization/repository format used by GitHub.
+    # Ensures each element of gitlab_projects list matches the
+    # namespace/project format used by GitLab.
     condition = length([
-      for repo in var.repositories : 1
-      if length(regexall("^project_path:[A-Za-z0-9_.-]+?/([A-Za-z0-9_.:/-]+|\\*)$", repo)) > 0
-    ]) == length(var.repositories)
-    error_message = "Repositories must be specified in the organization/repository format."
+      for path in var.project_paths : 1
+      if length(regexall("project_path:[A-Za-z0-9_.-]+?/([A-Za-z0-9_.:/-]+|\\*)$", path)) > 0
+    ]) == length(var.project_paths)
+    error_message = "Projects must be specified in the "project_path:namespace/project" format."
   }
 }
 
@@ -68,24 +68,20 @@ variable "oidc_role_attach_policies" {
 }
 
 variable "match_field" {
-  type    = string
-  default = "sub"
-}
-
-variable "gitlab_url" {
-  type    = string
-  default = "https://gitlab.com"
+  description = "the token field the OIDC provider filter on"
+  type        = string
+  default     = "sub"
 }
 
 variable "gitlab_tls_url" {
-  type    = string
-  # Avoid using https scheme because the Hashicorp TLS provider has started following redirects starting v4.
+  type        = string
+  description = "the Hashicorp TLS provider has started following redirects starting v4. so we use tls://"
   # See https://github.com/hashicorp/terraform-provider-tls/issues/249
   default = "tls://gitlab.com:443"
 }
 
 variable "aud_value" {
   description = "(Required) A list of client IDs (also known as audiences). When a mobile or web app registers with an OpenID Connect provider, they establish a value that identifies the application. (This is the value that's sent as the client_id parameter on OAuth requests.)"
-  type    = list(string)
-  default = ["https://gitlab.com"]
+  type        = list(string)
+  default     = ["https://gitlab.com"]
 }
