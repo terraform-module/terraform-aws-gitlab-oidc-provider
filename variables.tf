@@ -44,7 +44,7 @@ variable "project_paths" {
     # namespace/project format used by GitLab.
     condition = length([
       for path in var.project_paths : 1
-      if length(regexall("project_path:[A-Za-z0-9_.-]+?/([A-Za-z0-9_.:/-]+|\\*)$", path)) > 0
+      if length(regexall("project_path:[A-Za-z0-9_.-]+?/([A-Za-z0-9_.:?*/-]+|\\*)$", path)) > 0
     ]) == length(var.project_paths)
     error_message = "Projects must be specified in the \"project_path:namespace/project\" format."
   }
