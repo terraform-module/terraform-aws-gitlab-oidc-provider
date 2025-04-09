@@ -35,7 +35,7 @@ variable "role_description" {
 }
 
 variable "project_paths" {
-  description = "List of GitLab namesapce/project names authorized to assume the role."
+  description = "List of GitLab namespace/project names authorized to assume the role."
   type        = list(string)
   default     = []
 
